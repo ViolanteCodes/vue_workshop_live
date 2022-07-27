@@ -6,6 +6,7 @@ import TwoColumnWithImageSection from "@/components/HomepageSections/TwoColumnWi
 import FeaturesSection from "@/components/HomepageSections/FeaturesSection.vue";
 import TestimonialsSection from "@/components/HomepageSections/TestimonialsSection.vue";
 import BlogSection from "@/components/HomepageSections/BlogSection.vue";
+import PortfolioSection from "@/components/HomepageSections/PortfolioSection.vue"
 import { useApiError } from "@/utils/hooks";
 import Seo from "@/components/Seo.vue";
 import {useRoute} from "vue-router";
@@ -23,7 +24,7 @@ onMounted(async () => {
     const pageSlug = route.params.slug ?? "landing-page-with-components";
     const page = await butterCMS?.page.retrieve(
       "landing-page",
-      pageSlug
+      pageSlug, {"levels": 4},
     );
     pageData.value = page?.data.data;
     const posts = await butterCMS?.post.list({ page: 1, page_size: 2 });
@@ -61,6 +62,11 @@ onMounted(async () => {
         v-if="item.type === 'testimonials'"
         :key="index"
         :fields="item.fields"
+      />
+      <portfolio-section
+        :key="index"
+        v-bind="{ portfolioProjects: item.fields.portfolio_projects }"
+        v-if="item.type === 'portfolio'"
       />
     </template>
     <blog-section :blog-posts="blogPosts" />
